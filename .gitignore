@@ -8,3 +8,6 @@ __pycache__/
 *.pyo
 *.sqlite3
 *.db
+.env
+secrets.env
+*.env

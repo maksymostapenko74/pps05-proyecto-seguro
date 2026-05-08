@@ -23,3 +23,4 @@ Aplicación Python desarrollada en el módulo de Puesta en Producción Segura.
 - [x] `*.log` ignorados → los logs pueden contener trazas con información sensible del sistema
 - [x] `__pycache__/` ignorado → archivos compilados temporales, no son código fuente
 - [x] `*.sqlite3` ignorado → bases de datos locales con posibles datos de prueba sensibles
+- [x] `secrets.env` ignorado → las credenciales nunca deben llegar al repositorio remoto
