@@ -1,0 +1,38 @@
+# Nombre visible en la pestaña Actions de GitHub
+name: Security Scan con Gitleaks
+
+# Define los eventos que disparan este workflow automáticamente
+on:
+  push:
+    branches: ["*"]       # Cualquier push a cualquier rama
+  pull_request:
+    branches: ["master"]  # Pull requests que apunten a master
+
+jobs:
+  gitleaks-scan:
+    name: Escaneo de Secretos
+    # GitHub ejecuta esto en una máquina virtual Ubuntu temporal
+    # que se crea, ejecuta el workflow y se destruye automáticamente
+    runs-on: ubuntu-latest
+
+    # Principio de Menor Privilegio aplicado al propio workflow:
+    # solo necesita leer el código, sin permisos de escritura ni administración
+    permissions:
+      contents: read
+
+    steps:
+      # Descarga el código del repositorio en la máquina virtual de GitHub
+      - name: Checkout del código
+        uses: actions/checkout@v4
+        with:
+          # fetch-depth: 0 descarga el historial completo de todos los commits.
+          # Sin esto, gitleaks solo vería el último commit y perdería contexto histórico.
+          fetch-depth: 0
+
+      # Ejecuta gitleaks usando la Action oficial mantenida por el proyecto
+      - name: Ejecutar Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          # GITHUB_TOKEN es un token automático que GitHub genera para cada ejecución.
+          # Tiene permisos mínimos y expira al terminar el workflow.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
